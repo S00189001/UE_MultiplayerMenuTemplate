@@ -4,16 +4,57 @@
 #include "MasterGameInstance.h"
 
 #include "Engine/Engine.h"
+#include "UObject/ConstructorHelpers.h"
+#include "Blueprint/UserWidget.h"
+
+#include "PlatformTrigger.h"
 
 UMasterGameInstance::UMasterGameInstance(const FObjectInitializer& ObjectInitializer)
 {
-	UE_LOG(LogTemp, Warning, TEXT("Game Instance Constructor"));
+	// To link BP classes
+	ConstructorHelpers::FClassFinder<UUserWidget> MenuBPClass(TEXT("/Game/MenuSystem/WBP_MainMenu"));
+	if (!ensure(MenuBPClass.Class != nullptr)) return;
+
+	MenuClass = MenuBPClass.Class;
+
+	// Print name of found class
+	//UE_LOG(LogTemp, Warning, TEXT("Found Class %s"), *MenuBPClass.Class->GetName());
 }
 
 void UMasterGameInstance::Init()
 {
+	UE_LOG(LogTemp, Warning, TEXT("Found Class %s"), *MenuClass->GetName());
+
 	// Logs to the Console
-	UE_LOG(LogTemp, Warning, TEXT("Game Instance Init"));
+	//UE_LOG(LogTemp, Warning, TEXT("Game Instance Init"));
+}
+
+void UMasterGameInstance::LoadMenu()
+{
+	if (!ensure(MenuClass != nullptr)) return;
+	UUserWidget* Menu = CreateWidget<UUserWidget>(this, MenuClass);
+
+	if (!ensure(Menu != nullptr)) return;
+
+	// Display Menu
+	Menu->AddToViewport();
+
+	// Get Player Controller
+	APlayerController* PlayerController = GetFirstLocalPlayerController();
+	if (!ensure(PlayerController != nullptr)) return;
+
+
+	// *** 
+	FInputModeUIOnly InputModeData;
+	InputModeData.SetWidgetToFocus(Menu->TakeWidget());
+	InputModeData.SetLockMouseToViewportBehavior(EMouseLockMode::DoNotLock);
+
+	PlayerController->SetInputMode(InputModeData);
+
+	// Mouse visibility = true
+	PlayerController->SetShowMouseCursor(true);
+	//***1
+
 }
 
 void UMasterGameInstance::Host()
@@ -36,6 +77,7 @@ void UMasterGameInstance::Join(const FString& Address)
 
 	Engine->AddOnScreenDebugMessage(0, 5, FColor::Green, FString::Printf(TEXT("Joining %s"), *Address));
 
+	// Get Player Controller
 	APlayerController* PlayerController = GetFirstLocalPlayerController();
 	if (!ensure(PlayerController != nullptr)) return;
 

@@ -24,4 +24,11 @@ public:
 
 	UFUNCTION(Exec)
 		void Join(const FString& Address);
+
+	UFUNCTION(BlueprintCallable)
+		void LoadMenu();
+
+private:
+	// Added "Class" for forward declaration as no include added
+	TSubclassOf<class UUserWidget> MenuClass;
 };

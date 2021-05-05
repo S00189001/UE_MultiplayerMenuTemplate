@@ -4,31 +4,33 @@
 
 #include "CoreMinimal.h"
 #include "Engine/GameInstance.h"
+// Not Modular <Here>
+#include "UE_MultiplayerTemp/MenuSystem/MenuInterface.h"
+
 #include "MasterGameInstance.generated.h"
 
-/**
- *
- */
 UCLASS()
-class UE_MULTIPLAYERTEMP_API UMasterGameInstance : public UGameInstance
+class UE_MULTIPLAYERTEMP_API UMasterGameInstance : public UGameInstance, public IMenuInterface
 {
-	GENERATED_BODY()
+    GENERATED_BODY()
 
 public:
-	UMasterGameInstance(const FObjectInitializer& ObjectInitializer);
+    UMasterGameInstance(const FObjectInitializer& ObjectInitializer);
 
-	virtual void Init();
+    virtual void Init();
 
-	UFUNCTION(Exec)
-		void Host();
+    UFUNCTION(Exec)
+        void Host();
 
-	UFUNCTION(Exec)
-		void Join(const FString& Address);
+    UFUNCTION(Exec)
+        void Join(const FString& Address);
 
-	UFUNCTION(BlueprintCallable)
-		void LoadMenu();
+    UFUNCTION(BlueprintCallable)
+        void LoadMenu();
 
 private:
-	// Added "Class" for forward declaration as no include added
-	TSubclassOf<class UUserWidget> MenuClass;
+    // Added "Class" for forward declaration as no include added
+    TSubclassOf<class UUserWidget> MenuClass;
+
+    class UMainMenu* Menu;
 };

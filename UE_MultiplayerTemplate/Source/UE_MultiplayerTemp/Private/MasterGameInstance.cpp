@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+// Fill out your copyright notice in the Description page of Project Settings. cpp
 
 
 #include "MasterGameInstance.h"
@@ -8,6 +8,8 @@
 #include "Blueprint/UserWidget.h"
 
 #include "PlatformTrigger.h"
+// Not Moduler <Here>
+#include "UE_MultiplayerTemp/MenuSystem/MainMenu.h"
 
 UMasterGameInstance::UMasterGameInstance(const FObjectInitializer& ObjectInitializer)
 {
@@ -32,33 +34,23 @@ void UMasterGameInstance::Init()
 void UMasterGameInstance::LoadMenu()
 {
 	if (!ensure(MenuClass != nullptr)) return;
-	UUserWidget* Menu = CreateWidget<UUserWidget>(this, MenuClass);
-
+	Menu = CreateWidget<UMainMenu>(this, MenuClass);
 	if (!ensure(Menu != nullptr)) return;
 
-	// Display Menu
-	Menu->AddToViewport();
+	// Call Menu Setup
+	Menu->Setup();
 
-	// Get Player Controller
-	APlayerController* PlayerController = GetFirstLocalPlayerController();
-	if (!ensure(PlayerController != nullptr)) return;
-
-
-	// *** 
-	FInputModeUIOnly InputModeData;
-	InputModeData.SetWidgetToFocus(Menu->TakeWidget());
-	InputModeData.SetLockMouseToViewportBehavior(EMouseLockMode::DoNotLock);
-
-	PlayerController->SetInputMode(InputModeData);
-
-	// Mouse visibility = true
-	PlayerController->SetShowMouseCursor(true);
-	//***1
+	Menu->SetMenuInterface(this);
 
 }
 
 void UMasterGameInstance::Host()
 {
+	if (Menu != nullptr)
+	{
+		Menu->MenuTeardown();
+	}
+
 	UEngine* Engine = GetEngine();
 	if (!ensure(Engine != nullptr)) return;
 

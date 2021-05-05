@@ -24,7 +24,6 @@ class UE_MULTIPLAYERTEMP_API IMenuInterface
 
 		// ( = 0 is empty implementation)
 		//Expects game instance to implement the functionality
-		virtual void Host() = 0;
-
 public:
+		virtual void Host() = 0;
 };

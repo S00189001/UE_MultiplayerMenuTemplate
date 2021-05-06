@@ -3,8 +3,8 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Blueprint/UserWidget.h"
-#include "MenuInterface.h"
+//#include "Blueprint/UserWidget.h"
+#include "MenuWidget.h"
 
 #include "MainMenu.generated.h"
 
@@ -12,15 +12,9 @@
  * 
  */
 UCLASS()
-class UE_MULTIPLAYERTEMP_API UMainMenu : public UUserWidget
+class UE_MULTIPLAYERTEMP_API UMainMenu : public UMenuWidget
 {
 	GENERATED_BODY()
-	
-public:
-	void SetMenuInterface(IMenuInterface* MenuInterface);
-
-	void Setup();
-	void MenuTeardown();
 
 protected:
 	virtual bool Initialize();
@@ -36,6 +30,9 @@ private:
 		class UButton* CancelJoinMenuButton;
 
 	UPROPERTY(meta = (BindWidget))
+		class UButton* ConfirmJoinMenuButton;
+
+	UPROPERTY(meta = (BindWidget))
 		class UWidgetSwitcher* MenuSwitcher;
 
 	UPROPERTY(meta = (BindWidget))
@@ -44,8 +41,15 @@ private:
 	UPROPERTY(meta = (BindWidget))
 		class UWidget* MainMenu;
 
+	UPROPERTY(meta = (BindWidget))
+		class UEditableTextBox* IPAddressField;
+
+
 	UFUNCTION()
 		void HostServer();
+
+	UFUNCTION()
+		void JoinServer();
 	
 	UFUNCTION()
 		void OpenJoinMenu();
@@ -53,5 +57,4 @@ private:
 	UFUNCTION()
 		void OpenMainMenu();
 
-	IMenuInterface* P_MenuInterface;
 };

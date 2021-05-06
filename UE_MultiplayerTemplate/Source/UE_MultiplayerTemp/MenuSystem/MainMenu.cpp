@@ -5,6 +5,7 @@
 
 #include "Components/Button.h"
 #include "Components/WidgetSwitcher.h"
+#include "Components/EditableTextBox.h"
 
 bool UMainMenu::Initialize()
 {
@@ -25,61 +26,13 @@ bool UMainMenu::Initialize()
 	if (!ensure(CancelJoinMenuButton != nullptr)) return false;
 	// Call for binding
 	CancelJoinMenuButton->OnClicked.AddDynamic(this, &UMainMenu::OpenMainMenu);
+	
+	// Binding to a button in Main Menu (Back)
+	if (!ensure(ConfirmJoinMenuButton != nullptr)) return false;
+	// Call for binding
+	ConfirmJoinMenuButton->OnClicked.AddDynamic(this, &UMainMenu::JoinServer);
 
 	return true;
-}
-
-void UMainMenu::SetMenuInterface(IMenuInterface* MenuInterface)
-{
-	P_MenuInterface = MenuInterface;
-}
-
-void UMainMenu::Setup()
-{
-	// Display Menu
-	this->AddToViewport();
-
-	// Get World
-	UWorld* World = GetWorld();
-	if (!ensure(World != nullptr)) return;
-
-	// Get first Player Controller
-	APlayerController* PlayerController = World->GetFirstPlayerController();
-	if (!ensure(PlayerController != nullptr)) return;
-
-	// *** 
-	FInputModeUIOnly InputModeData;
-	InputModeData.SetWidgetToFocus(this->TakeWidget());
-	InputModeData.SetLockMouseToViewportBehavior(EMouseLockMode::DoNotLock);
-
-	// Set Input mode for Player Controller
-	PlayerController->SetInputMode(InputModeData);
-
-	// Set Mouse visibility = true for Player Controller
-	PlayerController->SetShowMouseCursor(true);
-	//***1
-}
-
-void UMainMenu::MenuTeardown()
-{
-	// Remove Menu From Veiwport
-	this->RemoveFromViewport();
-
-	// Get World
-	UWorld* World = GetWorld();
-	if (!ensure(World != nullptr)) return;
-
-	// Get first Player Controller
-	APlayerController* PlayerController = World->GetFirstPlayerController();
-	if (!ensure(PlayerController != nullptr)) return;
-
-	// Set Input mode for Player Controller
-	FInputModeGameOnly InputModeData;
-	PlayerController->SetInputMode(InputModeData);
-
-	// Set Mouse visibility = true for Player Controller
-	PlayerController->SetShowMouseCursor(false);
-
 }
 
 void UMainMenu::HostServer()
@@ -91,6 +44,17 @@ void UMainMenu::HostServer()
 		P_MenuInterface->Host();
 	}
 
+}
+
+void UMainMenu::JoinServer()
+{
+	if (P_MenuInterface != nullptr)
+	{
+		// Get the entered IP Address String
+		if (!ensure(IPAddressField != nullptr)) return;
+		const FString& Address = IPAddressField->GetText().ToString();
+		P_MenuInterface->Join(Address);
+	}
 }
 
 void UMainMenu::OpenJoinMenu()

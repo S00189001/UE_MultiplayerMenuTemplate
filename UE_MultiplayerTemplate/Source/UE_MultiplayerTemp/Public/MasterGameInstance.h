@@ -27,10 +27,15 @@ public:
 
     UFUNCTION(BlueprintCallable)
         void LoadMenu();
+    
+    UFUNCTION(BlueprintCallable)
+        void InGameLoadMenu();
 
 private:
     // Added "Class" for forward declaration as no include added
     TSubclassOf<class UUserWidget> MenuClass;
+
+    TSubclassOf<class UUserWidget> InGameEscMenuClass;
 
     class UMainMenu* Menu;
 };

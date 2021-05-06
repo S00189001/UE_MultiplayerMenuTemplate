@@ -4,6 +4,7 @@
 #include "MainMenu.h"
 
 #include "Components/Button.h"
+#include "Components/WidgetSwitcher.h"
 
 bool UMainMenu::Initialize()
 {
@@ -11,8 +12,19 @@ bool UMainMenu::Initialize()
 	if (!Success) return false;
 
 	// Binding to a button in Main Menu (Host)
-	if (!ensure(Host != nullptr)) return false;
-	Host->OnClicked.AddDynamic(this, &UMainMenu::HostServer);
+	if (!ensure(HostButton != nullptr)) return false;
+	// Call for binding
+	HostButton->OnClicked.AddDynamic(this, &UMainMenu::HostServer);
+	
+	// Binding to a button in Main Menu (Join)
+	if (!ensure(JoinButton != nullptr)) return false;
+	// Call for binding
+	JoinButton->OnClicked.AddDynamic(this, &UMainMenu::OpenJoinMenu);
+
+	// Binding to a button in Main Menu (Back)
+	if (!ensure(CancelJoinMenuButton != nullptr)) return false;
+	// Call for binding
+	CancelJoinMenuButton->OnClicked.AddDynamic(this, &UMainMenu::OpenMainMenu);
 
 	return true;
 }
@@ -79,4 +91,20 @@ void UMainMenu::HostServer()
 		P_MenuInterface->Host();
 	}
 
+}
+
+void UMainMenu::OpenJoinMenu()
+{
+	if (!ensure(MenuSwitcher != nullptr)) return;
+	if (!ensure(JoinMenu != nullptr)) return;
+	MenuSwitcher->SetActiveWidget(JoinMenu);
+
+
+}
+
+void UMainMenu::OpenMainMenu()
+{
+	if (!ensure(MenuSwitcher != nullptr)) return;
+	if (!ensure(JoinMenu != nullptr)) return;
+	MenuSwitcher->SetActiveWidget(MainMenu);
 }

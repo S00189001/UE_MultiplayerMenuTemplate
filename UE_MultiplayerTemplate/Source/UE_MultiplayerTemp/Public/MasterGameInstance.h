@@ -20,16 +20,18 @@ public:
     virtual void Init();
 
     UFUNCTION(Exec)
-        void Host();
+        void Host() override;
 
     UFUNCTION(Exec)
-        void Join(const FString& Address);
+        void Join(const FString& Address) override;
 
     UFUNCTION(BlueprintCallable)
         void LoadMenu();
     
     UFUNCTION(BlueprintCallable)
         void InGameLoadMenu();
+
+    virtual void LoadMainMenu() override;
 
 private:
     // Added "Class" for forward declaration as no include added
@@ -38,4 +40,5 @@ private:
     TSubclassOf<class UUserWidget> InGameEscMenuClass;
 
     class UMainMenu* Menu;
+
 };

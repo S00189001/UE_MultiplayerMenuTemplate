@@ -19,6 +19,7 @@ class UE_MULTIPLAYERTEMP_API UMenuWidget : public UUserWidget
 public:
 	void Setup();
 	void MenuTeardown();
+	void CloseApplication();
 
 	void SetMenuInterface(IMenuInterface* MenuInterface);
 

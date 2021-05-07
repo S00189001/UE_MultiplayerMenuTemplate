@@ -10,8 +10,13 @@ bool UInGameEscMenu::Initialize()
 	if (!Success) return false;
 
 	// Bindings
+	// Resume Button
 	if (!ensure(EscMenuResumeButton != nullptr)) return false;
 	EscMenuResumeButton->OnClicked.AddDynamic(this, &UInGameEscMenu::ResumePressed);
+
+	// Exit Button
+	if (!ensure(EscMenuExitButton != nullptr)) return false;
+	EscMenuExitButton->OnClicked.AddDynamic(this, &UInGameEscMenu::ExitPressed);
 
 
 	return true;
@@ -20,4 +25,13 @@ bool UInGameEscMenu::Initialize()
 void UInGameEscMenu::ResumePressed()
 {
 	MenuTeardown();
+}
+
+void UInGameEscMenu::ExitPressed()
+{
+	if (P_MenuInterface != nullptr)
+	{
+		MenuTeardown();
+		P_MenuInterface->LoadMainMenu();
+	}
 }

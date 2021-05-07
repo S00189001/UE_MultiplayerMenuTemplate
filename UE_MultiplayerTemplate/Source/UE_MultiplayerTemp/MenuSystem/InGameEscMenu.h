@@ -22,8 +22,14 @@ protected:
 private:
 	UPROPERTY(meta = (BindWidget))
 		class UButton* EscMenuResumeButton;
+	
+	UPROPERTY(meta = (BindWidget))
+		class UButton* EscMenuExitButton;
 
 	UFUNCTION()
 		void ResumePressed();
+
+	UFUNCTION()
+		void ExitPressed();
 
 };

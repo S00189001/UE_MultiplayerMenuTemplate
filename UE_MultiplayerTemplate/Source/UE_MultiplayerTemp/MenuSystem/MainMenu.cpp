@@ -22,12 +22,17 @@ bool UMainMenu::Initialize()
 	// Call for binding
 	JoinButton->OnClicked.AddDynamic(this, &UMainMenu::OpenJoinMenu);
 
+	// Binding to a button in Main Menu (Exit)
+	if (!ensure(ExitButton != nullptr)) return false;
+	// Call for binding
+	ExitButton->OnClicked.AddDynamic(this, &UMainMenu::ExitGame);
+
 	// Binding to a button in Main Menu (Back)
 	if (!ensure(CancelJoinMenuButton != nullptr)) return false;
 	// Call for binding
 	CancelJoinMenuButton->OnClicked.AddDynamic(this, &UMainMenu::OpenMainMenu);
 	
-	// Binding to a button in Main Menu (Back)
+	// Binding to a button in Main Menu (JoinServer)
 	if (!ensure(ConfirmJoinMenuButton != nullptr)) return false;
 	// Call for binding
 	ConfirmJoinMenuButton->OnClicked.AddDynamic(this, &UMainMenu::JoinServer);
@@ -71,4 +76,9 @@ void UMainMenu::OpenMainMenu()
 	if (!ensure(MenuSwitcher != nullptr)) return;
 	if (!ensure(JoinMenu != nullptr)) return;
 	MenuSwitcher->SetActiveWidget(MainMenu);
+}
+
+void UMainMenu::ExitGame()
+{
+	CloseApplication();
 }

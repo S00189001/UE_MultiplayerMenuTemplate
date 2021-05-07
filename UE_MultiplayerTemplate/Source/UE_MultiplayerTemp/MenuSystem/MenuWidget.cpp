@@ -55,3 +55,17 @@ void UMenuWidget::SetMenuInterface(IMenuInterface* MenuInterface)
 {
 	P_MenuInterface = MenuInterface;
 }
+
+void UMenuWidget::CloseApplication()
+{
+	// Get World
+	UWorld* World = GetWorld();
+	if (!ensure(World != nullptr)) return;
+
+	// Get first Player Controller
+	APlayerController* PlayerController = World->GetFirstPlayerController();
+	if (!ensure(PlayerController != nullptr)) return;
+
+	// Exit Game
+	PlayerController->ConsoleCommand("quit");
+}
